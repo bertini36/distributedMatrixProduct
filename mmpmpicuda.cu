@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/* DISTRIBUTED AND PARALLEL MATRIX-MATRIX PRODUCT WITH MPI AND CUDA          */
+/* MULTI-NODE AND PARALLEL MATRIX-MATRIX PRODUCT WITH MPI AND CUDA           */
 /*                                                                           */
 /* File:         mmpmpicuda.cu                                               */
 /* Author:       Alberto Pou Quirós (Github: bertini36)                      */ 

@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/* MULTIPROCESSOR MATRIX-MATRIX PRODUCT WITH MPI                             */
+/* MULTI-NODE MATRIX-MATRIX PRODUCT WITH MPI                                 */
 /*                                                                           */
 /* File:         mmpmpi.cu                                                   */
 /* Author:       Alberto Pou Quirós (Github: bertini36)                      */ 

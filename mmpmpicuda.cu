@@ -37,10 +37,11 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <assert.h>
 #include <mpi.h>
 
-#define N 1024
+#define N 1024 # It has to be 32 multiple. Min 32 * Number of nodes.
 
 #define err(format, ...) do { fprintf(stderr, format, ##__VA_ARGS__); exit(1); } while (0)
 
@@ -52,12 +53,12 @@ inline void checkCuda(cudaError_t e) {
     }
 }
 
-__global__ void matrixProduct(double *matrix_a, double *matrix_b, double *matrix_c, int width, int nrows, int my_rank) {
+__global__ void matrixProduct(double *matrix_a, double *matrix_b, double *matrix_c, int width, int from, int my_rank) {
     int row = threadIdx.y + blockDim.y * blockIdx.y;
-    int col = threadIdx.x + blockDim.x * blockIdx.x; 
+    int col = threadIdx.x + blockDim.x * blockIdx.x;
     matrix_c[row * width + col] = 0;
     for (int k=0; k<width; k++) {
-        matrix_c[row * width + col] += matrix_a[(row * width) + (my_rank * nrows * width) + k] * matrix_b[k * width + col];
+        matrix_c[row * width + col] += matrix_a[((row + from) * width) + k] * matrix_b[k * width + col];
     }
 }
 
@@ -95,9 +96,35 @@ void showMatrices(double matrix_a[N][N], double matrix_b[N][N], double matrix_c[
     }
 }
 
+
+void checkMatrices(double matrix_a[N][N], double matrix_b[N][N], double matrix_c[N][N], double matrix_testc[N][N]) {
+    int i, j, k;
+    for(i = 0; i < N; i++)
+        for(j = 0; j < N; j++)
+            for(k = 0; k < N; k++)
+            {
+                matrix_testc[i][j] += matrix_a[i][k] * matrix_b[k][j];
+            }
+
+    for(i = 0; i < 32 == 1; i++) {
+        for(j = 0; j < 32; j++){
+            printf("%.1f ", (matrix_c[i][j]));
+        }
+        printf("\n");
+    }
+
+    printf("\n\n\n");
+    for(i = 0; i < 32 == 1; i++) {
+        for(j = 0; j < 32; j++){
+            printf("%.1f ", (matrix_testc[i][j]));
+        }
+        printf("\n");
+    }   
+}
+
 int main(int argc, char *argv[]) {
 
-    double A[N][N], B[N][N], C[N][N];
+    double A[N][N], B[N][N], C[N][N], C_TEST[N][N];
     double *d_a, *d_b, *d_c;
     int my_rank, comm_sz, from, to, nrows;
   
@@ -133,14 +160,17 @@ int main(int argc, char *argv[]) {
     checkCuda(cudaMemcpy(d_b, B, N*N*sizeof(double), cudaMemcpyHostToDevice));
 
     // CUDA threads structure definition
-    dim3 dimGrid(1);
-    dim3 dimBlock(N, nrows);    
+    int b = N/(32*comm_sz);
+    int a = N/32;
+
+    dim3 dimGrid(a, b);
+    dim3 dimBlock(32, 32);    // MAX BLOCK SIZE
 
     MPI_Barrier(MPI_COMM_WORLD);
     if (my_rank == 0) { gettimeofday(&start_time, NULL); }
 
     // Kernel launch
-    matrixProduct<<<dimGrid, dimBlock>>>(d_a, d_b, d_c, N, nrows, my_rank);
+    matrixProduct<<<dimGrid, dimBlock>>>(d_a, d_b, d_c, N, from, my_rank);
     checkCuda(cudaDeviceSynchronize());
     checkCuda(cudaGetLastError());
 

@@ -160,10 +160,7 @@ int main(int argc, char *argv[]) {
     checkCuda(cudaMemcpy(d_b, B, N*N*sizeof(double), cudaMemcpyHostToDevice));
 
     // CUDA threads structure definition
-    int b = N/(32*comm_sz);
-    int a = N/32;
-
-    dim3 dimGrid(a, b);
+    dim3 dimGrid(N/32, N/(32*comm_sz));
     dim3 dimBlock(32, 32);    // MAX BLOCK SIZE
 
     MPI_Barrier(MPI_COMM_WORLD);

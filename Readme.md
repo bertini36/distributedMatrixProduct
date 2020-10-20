@@ -9,6 +9,10 @@
     Check Cuda config
   </a>
 </p>
+<p align="center">
+Powered by <a href="https://en.wikipedia.org/wiki/Message_Passing_Interface" target="_blank">#mpi</a> and
+ <a href="https://developer.nvidia.com/cuda-zone" target="_blank">#cuda</a>.
+</p>
 
 #### Implementations
 <a href="https://github.com/bertini36/distributedMatrixProduct/blob/master/mmpmpi.c" target="_blank">

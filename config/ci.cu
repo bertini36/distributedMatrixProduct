@@ -1,7 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* CUDA INFORMATION                                                          */
 /*                                                                           */
-/* File:         cuda_information.cu                                         */
 /* Description:  This program gets the important information of the          */
 /*               available architecture                                      */
 /* Compilation:  nvcc ci.cu -o ci                                            */
@@ -13,7 +12,7 @@ int main() {
     const int kb = 1024;
     const int mb = kb * kb;
 
-    printf("CUDA version: %d v \n", CUDART_VERSION);    
+    printf("CUDA version: %d v \n", CUDART_VERSION);
 
     int devCount;
     cudaGetDeviceCount(&devCount);

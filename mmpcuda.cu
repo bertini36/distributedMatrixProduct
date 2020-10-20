@@ -1,8 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* PARALLEL MATRIX-MATRIX PRODUCT WITH CUDA                                  */
 /*                                                                           */
-/* File:         mmpcuda.cu                                                  */
-/* Author:       Alberto Pou Quirós (Github: bertini36)                      */ 
 /* Description:  This program performs a matrix product (A * B = C)          */
 /*               parallelizing the computation with Nvidia CUDA technology   */
 /* Compilation:  nvcc mmpcuda.cu -o mmpcuda                                  */
@@ -14,7 +12,7 @@
 #include <assert.h>
 
 #define N 1024
-#define BLOCK_SIZE_DIM 16 
+#define BLOCK_SIZE_DIM 16
 
 #define err(format, ...) do { fprintf(stderr, format, ##__VA_ARGS__); exit(1); } while (0)
 
@@ -87,7 +85,7 @@ int main() {
 
     // CUDA threads structure definition
     dim3 dimGrid((N + BLOCK_SIZE_DIM -1) / BLOCK_SIZE_DIM, (N + BLOCK_SIZE_DIM -1) / BLOCK_SIZE_DIM);
-    dim3 dimBlock(BLOCK_SIZE_DIM, BLOCK_SIZE_DIM);  
+    dim3 dimBlock(BLOCK_SIZE_DIM, BLOCK_SIZE_DIM);
 
     // Create events
     cudaEvent_t event1, event2;
@@ -95,7 +93,7 @@ int main() {
     checkCuda(cudaEventCreate(&event2));
 
     // Record events around kernel launch
-    checkCuda(cudaEventRecord(event1, 0)); 
+    checkCuda(cudaEventRecord(event1, 0));
     matrixProduct<<<dimGrid, dimBlock>>>(d_a, d_b, d_c, N);
     checkCuda(cudaEventRecord(event2, 0));
 

@@ -1,11 +1,10 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* CUDA EXECUTION CONFIGURATION                                              */
 /*                                                                           */
-/* File:         cuda_execution_configuration.cu                             */
 /* Description:  This program suggests which is the best configuration of    */
 /*               CUDA blocks based on the available architecture             */
 /*               parallelizing the computation with Nvidia CUDA technology   */
-/* Compilation:  nvcc cec.cu -o cec                                          */  
+/* Compilation:  nvcc cec.cu -o cec                                          */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #define min(a, b) ((a < b) ? a : b )
@@ -59,7 +58,7 @@ void calcExecConf(int numberOfThreads, int registersPerThread, int sharedPerThre
         if (totalBlocks % SM == 0)
             imbalance = 0;
         else {
-            int blocksPerSM = totalBlocks / SM; 
+            int blocksPerSM = totalBlocks / SM;
             imbalance = (SM − (totalBlocks % SM)) / (blocksPerSM + 1.0);
         }
         if (bestimbalance >= imbalance) {
@@ -76,4 +75,4 @@ int main() {
     printf("Best threads per block: %d \n", bestThreadsPerBlock);
     printf("Best total blocks: %d \n", bestTotalBlocks);
     return 0;
-} 
+}

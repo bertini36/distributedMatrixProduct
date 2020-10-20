@@ -1,13 +1,11 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* MULTI-NODE AND PARALLEL MATRIX-MATRIX PRODUCT WITH MPI AND CUDA           */
 /*                                                                           */
-/* File:         mmpmpicuda.cu                                               */
-/* Author:       Alberto Pou Quirós (Github: bertini36)                      */ 
 /* Description:  This program performs a matrix product (A * B = C)          */
 /*               distributing the computation between multiple nodes         */
 /*               with MPI technology and parallelizing the computation in    */
 /*               every node with Nvidia CUDA technology                      */
-/* Compilation:  nvcc -I/opt/mpi/bullxmpi/1.2.9.1/include                    */  
+/* Compilation:  nvcc -I/opt/mpi/bullxmpi/1.2.9.1/include                    */
 /*               -L/opt/mpi/bullxmpi/1.2.9.1/lib -lmpi -ldl -lm -lnuma       */
 /*               -lrt -lnsl -lutil -lm -ldl mmpmpicuda.cu -o mmpmpicuda      */
 /* Strategy:                                                                 */
@@ -18,11 +16,11 @@
 /*                   |_________________________________|                     */
 /*                   |                                 |                     */
 /*                   |               NODE 2            | 4                   */
-/*              C =  |_________________________________|    16               */ 
+/*              C =  |_________________________________|    16               */
 /*                   |                                 |                     */
 /*                   |               NODE 3            | 4                   */
 /*                   |_________________________________|                     */
-/*                   |                                 |                     */ 
+/*                   |                                 |                     */
 /*                   |               NODE 4            | 4                   */
 /*                   |_________________________________|                     */
 /*                                                                           */
@@ -119,7 +117,7 @@ void checkMatrices(double matrix_a[N][N], double matrix_b[N][N], double matrix_c
             printf("%.1f ", (matrix_testc[i][j]));
         }
         printf("\n");
-    }   
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -127,11 +125,11 @@ int main(int argc, char *argv[]) {
     double A[N][N], B[N][N], C[N][N], C_TEST[N][N];
     double *d_a, *d_b, *d_c;
     int my_rank, comm_sz, from, to, nrows;
-  
+
     // MPI initialization
     MPI_Init (&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);    // Process id 
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);    // Number of processors 
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);    // Process id
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);    // Number of processors
 
     if (N % comm_sz != 0) {
         if (my_rank == 0) printf("Matrix size not divisible by number of processors \n");
@@ -173,7 +171,7 @@ int main(int argc, char *argv[]) {
 
     // Calculate compute time
     MPI_Barrier(MPI_COMM_WORLD);
-    if (my_rank == 0) { 
+    if (my_rank == 0) {
         gettimeofday(&end_time, NULL);
         printf("Compute time: %.1f ms \n", (float) (end_time.tv_sec - start_time.tv_sec) * 1000 + (end_time.tv_usec - start_time.tv_usec) / 1000);
      }
@@ -189,7 +187,7 @@ int main(int argc, char *argv[]) {
     checkCuda(cudaFree(d_a));
     checkCuda(cudaFree(d_b));
     checkCuda(cudaFree(d_c));
-    
+
     MPI_Finalize();
     return 0;
 

@@ -1,8 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* MULTI-NODE MATRIX-MATRIX PRODUCT WITH MPI                                 */
 /*                                                                           */
-/* File:         mmpmpi.cu                                                   */
-/* Author:       Alberto Pou Quirós (Github: bertini36)                      */ 
 /* Description:  This program performs a matrix product (A * B = C)          */
 /*               distributing the computation between multiple nodes         */
 /*               with MPI technology                                         */
@@ -55,11 +53,11 @@ int main(int argc, char *argv[]) {
 
     double A[N][N], B[N][N], C[N][N];
     int my_rank, comm_sz, from, to, i, j, k;
-  
+
     // MPI initialization
     MPI_Init (&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);    // Process id 
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);    // Number of processors 
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);    // Process id
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);    // Number of processors
 
     if (N % comm_sz != 0) {
         if (my_rank == 0) printf("Matrix size not divisible by number of processors \n");
@@ -84,7 +82,7 @@ int main(int argc, char *argv[]) {
     if (my_rank == 0) { gettimeofday(&start_time, NULL); }
 
     // Calculate the product
-    for (i=from; i<to; i++) 
+    for (i=from; i<to; i++)
         for (j=0; j<N; j++) {
             C[i][j] = 0;
         for (k=0; k<N; k++)
@@ -93,7 +91,7 @@ int main(int argc, char *argv[]) {
 
     // Calculate compute time
     MPI_Barrier(MPI_COMM_WORLD);
-    if (my_rank == 0) { 
+    if (my_rank == 0) {
         gettimeofday(&end_time, NULL);
         printf("Compute time: %.1f ms \n", (float) (end_time.tv_sec - start_time.tv_sec) * 1000 + (end_time.tv_usec - start_time.tv_usec) / 1000);
      }

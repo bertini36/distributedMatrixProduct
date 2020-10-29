@@ -25,5 +25,6 @@ Powered by <a href="https://en.wikipedia.org/wiki/Message_Passing_Interface" tar
     Multi-node and multi-thread implementation with MPI and CUDA technlogy combination
 </a>
 
-<p align="center">&mdash; Built with :heart: from Barcelona &mdash;</p>
+<br />
+<p align="center">&mdash; Built with :heart: from Mallorca &mdash;</p>
 
